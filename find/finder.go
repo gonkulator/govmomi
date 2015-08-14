@@ -557,6 +557,30 @@ func (f *Finder) VirtualMachineList(ctx context.Context, path string) ([]*object
 	return vms, nil
 }
 
+// VirtualMachineListRecursive allow for recursively searching for vms in child folders
+func (f *Finder) VirtualMachineListRecursive(ctx context.Context, path string, recursive bool) ([]*object.VirtualMachine, error) {
+	es, err := f.find(ctx, f.vmFolder, recursive, path)
+	if err != nil {
+		return nil, err
+	}
+
+	var vms []*object.VirtualMachine
+	for _, e := range es {
+		switch o := e.Object.(type) {
+		case mo.VirtualMachine:
+			vm := object.NewVirtualMachine(f.client, o.Reference())
+			vm.InventoryPath = e.Path
+			vms = append(vms, vm)
+		}
+	}
+
+	if len(vms) == 0 {
+		return nil, &NotFoundError{"vm", path}
+	}
+
+	return vms, nil
+}
+
 func (f *Finder) VirtualMachine(ctx context.Context, path string) (*object.VirtualMachine, error) {
 	vms, err := f.VirtualMachineList(ctx, path)
 	if err != nil {
@@ -570,8 +594,8 @@ func (f *Finder) VirtualMachine(ctx context.Context, path string) (*object.Virtu
 	return vms[0], nil
 }
 
-func (f *Finder) VirtualAppList(ctx context.Context, path string) ([]*object.VirtualApp, error) {
-	es, err := f.find(ctx, f.vmFolder, false, path)
+func (f *Finder) VirtualAppList(ctx context.Context, path string, recurse bool) ([]*object.VirtualApp, error) {
+	es, err := f.find(ctx, f.vmFolder, recurse, path)
 	if err != nil {
 		return nil, err
 	}

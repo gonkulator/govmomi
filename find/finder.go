@@ -201,7 +201,12 @@ func (f *Finder) ManagedObjectListChildren(ctx context.Context, path string) ([]
 }
 
 func (f *Finder) DatacenterList(ctx context.Context, path string) ([]*object.Datacenter, error) {
-	es, err := f.find(ctx, f.rootFolder, false, path)
+	return f.DatacenterListRecursive(ctx, path, false)
+}
+
+// DatacenterListRecursive allows for recursive calls to DatacenterList
+func (f *Finder) DatacenterListRecursive(ctx context.Context, path string, recursive bool) ([]*object.Datacenter, error) {
+	es, err := f.find(ctx, f.rootFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +249,12 @@ func (f *Finder) DefaultDatacenter(ctx context.Context) (*object.Datacenter, err
 }
 
 func (f *Finder) DatastoreList(ctx context.Context, path string) ([]*object.Datastore, error) {
-	es, err := f.find(ctx, f.datastoreFolder, false, path)
+	return f.DatastoreListRecursive(ctx, path, false)
+}
+
+// DatastoreListRecursive allows for recursive calls to DatastoreList
+func (f *Finder) DatastoreListRecursive(ctx context.Context, path string, recursive bool) ([]*object.Datastore, error) {
+	es, err := f.find(ctx, f.datastoreFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +300,12 @@ func (f *Finder) DefaultDatastore(ctx context.Context) (*object.Datastore, error
 }
 
 func (f *Finder) ComputeResourceList(ctx context.Context, path string) ([]*object.ComputeResource, error) {
-	es, err := f.find(ctx, f.hostFolder, false, path)
+	return f.ComputeResourceListRecursive(ctx, path, false)
+}
+
+// ComputeResourceListRecursive allows for recursive calls of ClusterComputeResourceList
+func (f *Finder) ComputeResourceListRecursive(ctx context.Context, path string, recursive bool) ([]*object.ComputeResource, error) {
+	es, err := f.find(ctx, f.hostFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -340,7 +355,12 @@ func (f *Finder) DefaultComputeResource(ctx context.Context) (*object.ComputeRes
 }
 
 func (f *Finder) ClusterComputeResourceList(ctx context.Context, path string) ([]*object.ClusterComputeResource, error) {
-	es, err := f.find(ctx, f.hostFolder, false, path)
+	return f.ClusterComputeResourceListRecursive(ctx, path, false)
+}
+
+// ClusterComputeResourceList allows for recursive calls of ClusterComputeResource
+func (f *Finder) ClusterComputeResourceListRecursive(ctx context.Context, path string, recursive bool) ([]*object.ClusterComputeResource, error) {
+	es, err := f.find(ctx, f.hostFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -381,7 +401,12 @@ func (f *Finder) ClusterComputeResource(ctx context.Context, path string) (*obje
 }
 
 func (f *Finder) HostSystemList(ctx context.Context, path string) ([]*object.HostSystem, error) {
-	es, err := f.find(ctx, f.hostFolder, false, path)
+	return f.HostSystemListRecursive(ctx, path, false)
+}
+
+// HostSystemListRecursive allows for recursive calls of HostSystemList
+func (f *Finder) HostSystemListRecursive(ctx context.Context, path string, recursive bool) ([]*object.HostSystem, error) {
+	es, err := f.find(ctx, f.hostFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -438,7 +463,12 @@ func (f *Finder) DefaultHostSystem(ctx context.Context) (*object.HostSystem, err
 }
 
 func (f *Finder) NetworkList(ctx context.Context, path string) ([]object.NetworkReference, error) {
-	es, err := f.find(ctx, f.networkFolder, false, path)
+	return f.NetworkListRecursive(ctx, path, false)
+}
+
+// NetworkListRecursive allows for recursive calls of NetworkList
+func (f *Finder) NetworkListRecursive(ctx context.Context, path string, recursive bool) ([]object.NetworkReference, error) {
+	es, err := f.find(ctx, f.networkFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -488,7 +518,12 @@ func (f *Finder) DefaultNetwork(ctx context.Context) (object.NetworkReference, e
 }
 
 func (f *Finder) ResourcePoolList(ctx context.Context, path string) ([]*object.ResourcePool, error) {
-	es, err := f.find(ctx, f.hostFolder, true, path)
+	return f.ResourcePoolListRecursive(ctx, path, true)
+}
+
+// ResourcePoolListRecursive allows for recursive calls to ResourcePoolList
+func (f *Finder) ResourcePoolListRecursive(ctx context.Context, path string, recursive bool) ([]*object.ResourcePool, error) {
+	es, err := f.find(ctx, f.hostFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -535,7 +570,12 @@ func (f *Finder) DefaultResourcePool(ctx context.Context) (*object.ResourcePool,
 }
 
 func (f *Finder) VirtualMachineList(ctx context.Context, path string) ([]*object.VirtualMachine, error) {
-	es, err := f.find(ctx, f.vmFolder, false, path)
+	return f.VirtualMachineListRecursive(ctx, path, false)
+}
+
+// VirtualMachineListRecursive allows for recursively calls to VirtualMachineList
+func (f *Finder) VirtualMachineListRecursive(ctx context.Context, path string, recursive bool) ([]*object.VirtualMachine, error) {
+	es, err := f.find(ctx, f.vmFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}
@@ -571,7 +611,12 @@ func (f *Finder) VirtualMachine(ctx context.Context, path string) (*object.Virtu
 }
 
 func (f *Finder) VirtualAppList(ctx context.Context, path string) ([]*object.VirtualApp, error) {
-	es, err := f.find(ctx, f.vmFolder, false, path)
+	return f.VirtualAppListRecursive(ctx, path, false)
+}
+
+// VirtualAppList allows for recursive calls to VirtualAppList
+func (f *Finder) VirtualAppListRecursive(ctx context.Context, path string, recursive bool) ([]*object.VirtualApp, error) {
+	es, err := f.find(ctx, f.vmFolder, recursive, path)
 	if err != nil {
 		return nil, err
 	}

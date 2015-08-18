@@ -501,7 +501,6 @@ func (f *Finder) DVSWSList(ctx context.Context, path string, recursive bool) ([]
 	return ns, nil
 }
 
-
 func (f *Finder) NetworkList(ctx context.Context, path string) ([]object.NetworkReference, error) {
 	return f.NetworkListRecursive(ctx, path, false)
 }

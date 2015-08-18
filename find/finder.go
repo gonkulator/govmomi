@@ -462,6 +462,46 @@ func (f *Finder) DefaultHostSystem(ctx context.Context) (*object.HostSystem, err
 	return hs, nil
 }
 
+func (f *Finder) NetworksList(ctx context.Context, path string, recursive bool) ([]object.Network, error) {
+	es, err := f.find(ctx, f.networkFolder, recursive, path)
+	if err != nil {
+		return nil, err
+	}
+
+	var ns []object.Network
+	for _, e := range es {
+		ref := e.Object.Reference()
+		switch ref.Type {
+		case "Network":
+			r := object.NewNetwork(f.client, ref)
+			r.InventoryPath = e.Path
+			ns = append(ns, *r)
+		}
+	}
+
+	return ns, nil
+}
+
+func (f *Finder) DVSWSList(ctx context.Context, path string, recursive bool) ([]object.DistributedVirtualPortgroup, error) {
+	es, err := f.find(ctx, f.networkFolder, recursive, path)
+	if err != nil {
+		return nil, err
+	}
+
+	var ns []object.DistributedVirtualPortgroup
+	for _, e := range es {
+		ref := e.Object.Reference()
+		switch ref.Type {
+		case "DistributedVirtualPortgroup":
+			r := object.NewDistributedVirtualPortgroup(f.client, ref)
+			r.InventoryPath = e.Path
+			ns = append(ns, *r)
+		}
+	}
+	return ns, nil
+}
+
+
 func (f *Finder) NetworkList(ctx context.Context, path string) ([]object.NetworkReference, error) {
 	return f.NetworkListRecursive(ctx, path, false)
 }

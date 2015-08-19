@@ -18,6 +18,7 @@ package find
 
 import (
 	"errors"
+	"fmt"
 	"path"
 
 	"github.com/vmware/govmomi/list"

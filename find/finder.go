@@ -482,7 +482,7 @@ func (f *Finder) NetworksList(ctx context.Context, path string, recursive bool) 
 	return ns, nil
 }
 
-func (f *Finder) DVSWSList(ctx context.Context, path string, recursive bool) ([]object.DistributedVirtualPortgroup, error) {
+func (f *Finder) DVPGList(ctx context.Context, path string, recursive bool) ([]object.DistributedVirtualPortgroup, error) {
 	es, err := f.find(ctx, f.networkFolder, recursive, path)
 	if err != nil {
 		return nil, err

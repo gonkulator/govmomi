@@ -482,7 +482,44 @@ func (f *Finder) NetworksList(ctx context.Context, path string, recursive bool) 
 	return ns, nil
 }
 
-func (f *Finder) DVSWSList(ctx context.Context, path string, recursive bool) ([]object.DistributedVirtualPortgroup, error) {
+func (f *Finder) SwitchList(ctx context.Context, path string) ([]object.DistributedVirtualSwitch, error) {
+	var ns []object.DistributedVirtualSwitch
+	folders, err := f.find(ctx, f.rootFolder, true, path)
+	if err != nil {
+		return ns, err
+	}
+	for _, folder := range folders {
+		if folder.Object.Reference().Type == "Folder" {
+			folder := object.NewFolder(f.client, folder.Object.Reference())
+			for _, k := range f.findSwitchesInFolder(ctx, folder) {
+				ns = append(ns, k)
+			}
+		}
+	}
+	return ns, nil
+}
+
+func (f *Finder) findSwitchesInFolder(ctx context.Context, folder *object.Folder) []object.DistributedVirtualSwitch {
+	var switches []object.DistributedVirtualSwitch
+	if children, err := folder.Children(ctx); err == nil {
+		for _, j := range children {
+			if j.Reference().Type == "VmwareDistributedVirtualSwitch" {
+				switches = append(switches, *object.NewDistributedVirtualSwitch(f.client, j.Reference()))
+			}
+			if j.Reference().Type == "Folder" {
+				switches2 := f.findSwitchesInFolder(ctx, object.NewFolder(f.client, j.Reference()))
+				for _, k := range switches2 {
+					switches = append(switches, k)
+				}
+			}
+		}
+	} else {
+		fmt.Printf("Error getting switches! %v\n", err)
+	}
+	return switches
+}
+
+func (f *Finder) DVPGList(ctx context.Context, path string, recursive bool) ([]object.DistributedVirtualPortgroup, error) {
 	es, err := f.find(ctx, f.networkFolder, recursive, path)
 	if err != nil {
 		return nil, err
